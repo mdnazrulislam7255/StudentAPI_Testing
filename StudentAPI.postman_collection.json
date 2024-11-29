@@ -1,0 +1,1077 @@
+{
+	"info": {
+		"_postman_id": "635ca9d6-697b-4113-9b1e-6a9ad48db256",
+		"name": "StudentAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34581577"
+	},
+	"item": [
+		{
+			"name": "Create details of a student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var status = pm.response.code;\r",
+							"console.log(status);\r",
+							"switch (status) {\r",
+							"    case 201:\r",
+							"        var jsonData = pm.response.json();\r",
+							"\r",
+							"        pm.test(\"Check Status code 201\", function () {\r",
+							"            pm.response.to.have.status(201);\r",
+							"        });\r",
+							"        break;\r",
+							"\r",
+							"    case 404:\r",
+							"        pm.test(\"Something went wrong/Not found\");\r",
+							"        break;\r",
+							"\r",
+							"    case 500:\r",
+							"        pm.test(\"Something went wrong\");\r",
+							"        break;\r",
+							"\r",
+							"    default:\r",
+							"}\r",
+							"var jsonData= pm.response.json();\r",
+							"pm.environment.set(\"id\",jsonData.id);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var ranadomId= pm.variables.replaceIn(\"{{$randomInt}}\")\r",
+							"pm.environment.set(\"id\",ranadomId);\r",
+							"\r",
+							"var ranadomfirstName= pm.variables.replaceIn(\"{{$randomFirstName}}\")\r",
+							"pm.environment.set(\"firstName\",ranadomfirstName);\r",
+							"let middleNames = [\r",
+							"    \"Michael\",\r",
+							"    \"Ann\",\r",
+							"    \"Lee\",\r",
+							"    \"Marie\",\r",
+							"    \"James\",\r",
+							"    \"Grace\",\r",
+							"    \"David\",\r",
+							"    \"Rose\",\r",
+							"    \"John\",\r",
+							"    \"Eve\",\r",
+							"    \"Claire\",\r",
+							"    \"Joseph\",\r",
+							"    \"Sophia\",\r",
+							"    \"William\",\r",
+							"    \"Alexis\",\r",
+							"    \"Taylor\",\r",
+							"    \"Rey\"\r",
+							"];\r",
+							"let randomMiddleName = middleNames[Math.floor(Math.random() * middleNames.length)];\r",
+							"pm.environment.set(\"random_middle_name\", randomMiddleName);\r",
+							"console.log(\"Generated Random Middle Name: \" + randomMiddleName);\r",
+							"\r",
+							"var ranadomlastName= pm.variables.replaceIn(\"{{$randomLastName}}\")\r",
+							"pm.environment.set(\"lastName\",ranadomlastName);\r",
+							"\r",
+							"let jsonData = {\r",
+							"    \"date_formats\": [\r",
+							"        \"Tue Aug 13 2024 10:43:26 GMT+0000 (Coordinated Universal Time)\",\r",
+							"        \"14/02/1997\",\r",
+							"        \"2024-11-22\",\r",
+							"        \"12/12/12\"\r",
+							"    ]\r",
+							"};\r",
+							"\r",
+							"function getRandomDate(start, end) {\r",
+							"    let randomTime = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));\r",
+							"    return randomTime;\r",
+							"}\r",
+							"\r",
+							"// Generate a random date within a 30-year range (1990 - 2050)\r",
+							"let startDate = new Date(1900, 0, 1); // Start: Jan 1, 1990\r",
+							"let endDate = new Date(2050, 11, 31); // End: Dec 31, 2050\r",
+							"let randomDate = getRandomDate(startDate, endDate);\r",
+							"\r",
+							"// Function to format dates dynamically\r",
+							"function formatRandomDate(date, format) {\r",
+							"    if (format === \"DD/MM/YYYY\") {\r",
+							"        return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;\r",
+							"    } else if (format === \"YYYY-MM-DD\") {\r",
+							"        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;\r",
+							"    } else if (format === \"Day of Week Format\") {\r",
+							"        return date.toString(); // Full date format like \"Tue Aug 13 2024 10:43:26 GMT+0000 (Coordinated Universal Time)\"\r",
+							"    } else if (format === \"Short Year Format\") {\r",
+							"        return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getFullYear()).slice(-2)}`;\r",
+							"    } else {\r",
+							"        throw new Error(\"Unknown format type\");\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"let formats = jsonData.date_formats;\r",
+							"let randomFormat = formats[Math.floor(Math.random() * formats.length)];\r",
+							"\r",
+							"// Format the random date\r",
+							"let formattedDate;\r",
+							"if (randomFormat.includes(\"GMT\")) {\r",
+							"    formattedDate = randomDate.toString(); // Handle GMT/UTC format\r",
+							"} else if (randomFormat.includes(\"/\")) {\r",
+							"    formattedDate = formatRandomDate(randomDate, \"DD/MM/YYYY\");\r",
+							"} else if (randomFormat.includes(\"-\")) {\r",
+							"    formattedDate = formatRandomDate(randomDate, \"YYYY-MM-DD\");\r",
+							"} else {\r",
+							"    formattedDate = formatRandomDate(randomDate, \"Short Year Format\");\r",
+							"}\r",
+							"pm.environment.set(\"random_date\", formattedDate);\r",
+							"console.log(\"Generated Random Date: \" + formattedDate);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"id\":\"{{id}}\",\r\n \"first_name\": \"{{firstName}}\",\r\n \"middle_name\": \"{{random_middle_name}}\",\r\n \"last_name\": \"{{lastName}}\",\r\n \"date_of_birth\": \"{{random_date}}\"\r\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Base_Url_student}}/api/studentsDetails/{{id}}",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"studentsDetails",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get student details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var status = pm.response.code;\r",
+							"console.log(status);\r",
+							"switch (status) {\r",
+							"    case 200:\r",
+							"        var jsonData = pm.response.json();\r",
+							"\r",
+							"        pm.test(\"Check Status code 200 OK\", function () {\r",
+							"            pm.response.to.have.status(200);\r",
+							"        });\r",
+							"        break;\r",
+							"\r",
+							"    case 404:\r",
+							"        pm.test(\"Something went wrong/Not found\");\r",
+							"        break;\r",
+							"\r",
+							"    case 500:\r",
+							"        pm.test(\"Something went wrong\");\r",
+							"        break;\r",
+							"\r",
+							"    default:\r",
+							"}\r",
+							"let responseData = pm.response.json();\r",
+							"let responseLength = responseData.length;\r",
+							"pm.test(\"Validate Response Length\", function () {\r",
+							"    pm.expect(responseLength).to.be.above(0);\r",
+							"    console.log(\"Response Length: \" + responseLength);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Base_Url_student}}/api/studentsDetails",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"studentsDetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a student by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Validate 'status' is dynamically loaded from response\", function () {\r",
+							"    pm.expect(jsonData).to.have.property(\"status\");\r",
+							"    let statusValue = jsonData.status;\r",
+							"    // Handle case where 'status' is a string (\"true\" or \"false\")\r",
+							"    if (typeof statusValue === \"string\") {\r",
+							"        statusValue = (statusValue.toLowerCase() === \"true\");\r",
+							"    }\r",
+							"    pm.expect(typeof statusValue).to.eql(\"boolean\", `Expected 'status' to be boolean but got '${typeof statusValue}'`);\r",
+							"    pm.expect(statusValue === true || statusValue === false, `Expected 'status' to be true or false, but got '${statusValue}'`).to.be.true;\r",
+							"    console.log(\"Status value:\", statusValue);\r",
+							"});\r",
+							"pm.test(\"Validate student ID\", function () {\r",
+							"    pm.expect(jsonData.data.id).to.equal(pm.environment.get(\"id\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check First Name\", function () {\r",
+							"    pm.expect(jsonData.data.first_name).to.equal(pm.environment.get(\"firstName\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check Middle Name\", function () {\r",
+							"    pm.expect(jsonData.data.middle_name).to.equal(pm.environment.get(\"random_middle_name\"));\r",
+							"});\r",
+							"pm.test(\"Check Last Name\", function () {\r",
+							"    pm.expect(jsonData.data.last_name).to.equal(pm.environment.get(\"lastName\"));\r",
+							"});\r",
+							"\r",
+							"\r",
+							"let randomDate = pm.environment.get(\"random_date\");\r",
+							"// Define regular expressions for the formats\r",
+							"let formats = [\r",
+							"    /^[A-Za-z]{3} [A-Za-z]{3} \\d{2} \\d{4} \\d{2}:\\d{2}:\\d{2} GMT[+-]\\d{4} \\(.*\\)$/, // GMT/UTC Format\r",
+							"    /^\\d{2}\\/\\d{2}\\/\\d{4}$/, // DD/MM/YYYY\r",
+							"    /^\\d{4}-\\d{2}-\\d{2}$/, // YYYY-MM-DD\r",
+							"    /^\\d{2}\\/\\d{2}\\/\\d{2}$/ // Short Year Format\r",
+							"];\r",
+							"\r",
+							"// Check if the random date matches any of the formats\r",
+							"let isValidFormat = formats.some((regex) => regex.test(randomDate));\r",
+							"\r",
+							"// Validate the format\r",
+							"pm.test(\"Random Date Format Validation\", function () {\r",
+							"    pm.expect(isValidFormat).to.be.true;\r",
+							"    console.log(\"Validated Date Format: \" + randomDate);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate the data type of the field value\", () => {\r",
+							"    pm.expect(jsonData.status).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.id).to.be.a(\"number\");\r",
+							"    pm.expect(jsonData.data.first_name).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.middle_name).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.last_name).to.be.a(\"string\");\r",
+							"    pm.expect(jsonData.data.date_of_birth).to.be.a(\"string\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Base_Url_student}}/api/studentsDetails/{{id}}",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"studentsDetails",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a student by ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let first_name= pm.variables.replaceIn(\"{{$randomFirstName}}\")\r",
+							"let middleNames = [\r",
+							"    \"Michael\",\r",
+							"    \"Ann\",\r",
+							"    \"Lee\",\r",
+							"    \"Marie\",\r",
+							"    \"James\",\r",
+							"    \"Grace\",\r",
+							"    \"David\",\r",
+							"    \"Rose\",\r",
+							"    \"John\",\r",
+							"    \"Eve\",\r",
+							"    \"Claire\",\r",
+							"    \"Joseph\",\r",
+							"    \"Sophia\",\r",
+							"    \"William\",\r",
+							"    \"Alexis\",\r",
+							"    \"Taylor\",\r",
+							"    \"Rey\"\r",
+							"];\r",
+							"let randomMiddleName = middleNames[Math.floor(Math.random() * middleNames.length)];\r",
+							"pm.environment.set(\"random_middle_name\", randomMiddleName);\r",
+							"\r",
+							"let last_name= pm.variables.replaceIn(\"{{$randomLastName}}\")\r",
+							"const firstnamePattern = /^[A-Za-z\\s]+$/;\r",
+							"const middle_namePattern = /^[A-Za-z\\s]+$/;\r",
+							"const last_namePattern = /^[A-Za-z]+$/;\r",
+							"\r",
+							"let isFirstNameValid = firstnamePattern.test(first_name);\r",
+							"let isMiddleNameValid =middle_namePattern.test(randomMiddleName);\r",
+							"let isLastNameValid= last_namePattern.test(last_name);\r",
+							"if (!isFirstNameValid || !isMiddleNameValid || !isLastNameValid) {\r",
+							"    pm.environment.set(\"updateAllowed\", \"false\");\r",
+							"    pm.error(\"Update failed.\");\r",
+							"} else {\r",
+							"    pm.environment.set(\"updateAllowed\", \"true\");\r",
+							"    pm.environment.set(\"firstName\", first_name);\r",
+							"    pm.environment.set(\"random_middle_name\", randomMiddleName);\r",
+							"    pm.environment.set(\"lastName\",last_name);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validate Status Code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Update 'status' and 'msg' fields\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    // Normalize and trim spaces from 'msg' field\r",
+							"    const normalizedMsg = response.msg.trim();\r",
+							"    pm.expect(response.status).to.eql(\"true\");\r",
+							"    pm.expect(normalizedMsg).to.eql(\"update  data success\");\r",
+							"});\r",
+							"pm.test(\"Check if data update is allowed\", function () {\r",
+							"    let updateAllowed = pm.environment.get(\"updateAllowed\");\r",
+							"    pm.expect(updateAllowed).to.eql(\"true\", \"Data update not allowed due to validation failure.\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {{id}},\r\n    \"first_name\": \"{{firstName}}\",\r\n    \"middle_name\": \"{{random_middle_name}}\",\r\n    \"last_name\": \"{{lastName}}\",\r\n    \"date_of_birth\": \"10/08/1999\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Base_Url_student}}/api/studentsDetails/{{id}}",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"studentsDetails",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a student by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let studentId = pm.environment.get(\"id\");\r",
+							"\r",
+							"pm.test(\"Check if studentId is present\", function () {\r",
+							"    if (!studentId) {\r",
+							"        console.error(\"No student ID found.\");\r",
+							"        postman.setNextRequest(null); \r",
+							"    } else {\r",
+							"        pm.expect(studentId).to.be.a('number'); \r",
+							"        console.log(\"Student ID: \" + studentId);\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{Base_Url_student}}/api/FinalStudentDetails/{{id}}",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"FinalStudentDetails",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create address by ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var randomHouseNumber= pm.variables.replaceIn(\"{{$randomStreetAddress}}\")\r",
+							"pm.environment.set(\"houseNumber\",randomHouseNumber);\r",
+							"\r",
+							"var randomCity= pm.variables.replaceIn(\"{{$randomCity}}\")\r",
+							"pm.environment.set(\"city\",randomCity);\r",
+							"\r",
+							"var randomState= pm.variables.replaceIn(\"{{$randomCity}}\")\r",
+							"pm.environment.set(\"state\",randomState);\r",
+							"\r",
+							"var randomCountry= pm.variables.replaceIn(\"{{$randomCountry}}\")\r",
+							"pm.environment.set(\"Country\",randomCountry);\r",
+							"\r",
+							"var randomCountryCode= pm.variables.replaceIn(\"{{$randomCountryCode}}\")\r",
+							"pm.environment.set(\"CountryCode\",randomCountryCode);\r",
+							"\r",
+							"var randomPhoneNumber= pm.variables.replaceIn(\"{{$randomPhoneNumber}}\")\r",
+							"pm.environment.set(\"home\",randomPhoneNumber);\r",
+							"\r",
+							"var randomPhoneNumber= pm.variables.replaceIn(\"{{$randomPhoneNumber}}\")\r",
+							"pm.environment.set(\"mobile\",randomPhoneNumber);\r",
+							"\r",
+							"var randomCountryCode1= pm.variables.replaceIn(\"{{$randomCountryCode}}\")\r",
+							"pm.environment.set(\"CountryCode1\",randomCountryCode1);\r",
+							"\r",
+							"var randomPhoneNumber1= pm.variables.replaceIn(\"{{$randomPhoneNumber}}\")\r",
+							"pm.environment.set(\"home1\",randomPhoneNumber1);\r",
+							"\r",
+							"var randomPhoneNumber1= pm.variables.replaceIn(\"{{$randomPhoneNumber}}\")\r",
+							"pm.environment.set(\"mobile1\",randomPhoneNumber1);\r",
+							"\r",
+							"// Set the expected value for Current_Address as null\r",
+							"pm.environment.set(\"Current_Address\", null);\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validate Status Code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Validate 'status' and 'msg' fields\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    const normalizedMsg = response.msg.trim();\r",
+							"    pm.expect(response.status).to.eql(\"true\");\r",
+							"    pm.expect(normalizedMsg).to.eql(\"Add  data success\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Permanent_Address\": {\r\n        \"House_Number\": \"{{houseNumber}}\",\r\n        \"City\": \"{{city}}\",\r\n        \"State\": \"{{state}}\",\r\n        \"Country\": \"{{Country}}\",\r\n        \"PhoneNumber\": [\r\n            {\r\n                \"Std_Code\": \"{{CountryCode}}\",\r\n                \"Home\": \"{{home}}\",\r\n                \"Mobile\": \"{{mobile}}\"\r\n            },\r\n             {\r\n                \"Std_Code\": \"{{CountryCode1}}\",\r\n                \"Home\": \"{{home1}}\",\r\n                \"Mobile\": \"{{mobile1}}\"\r\n            }\r\n        ]\r\n    },\r\n    \"stId\": {{id}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Base_Url_student}}/api/addresses/{{id}}",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"addresses",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get address by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Base_Url_student}}/api/addresses/{{id}}",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"addresses",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update address by ID",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Permanent_Address\": {\r\n        \"House_Number\": \"191/B\",\r\n        \"City\": \"{{city}}\",\r\n        \"State\": \"{{state}}\",\r\n        \"Country\": \"{{Country}}\",\r\n        \"PhoneNumber\": [\r\n            {\r\n                \"Std_Code\": \"{{CountryCode}}\",\r\n                \"Home\": \"{{home}}\",\r\n                \"Mobile\": \"{{mobile}}\"\r\n            },\r\n            {\r\n                \"Std_Code\": \"{{CountryCode1}}\",\r\n                \"Home\": \"{{home1}}\",\r\n                \"Mobile\": \"{{mobile1}}\"\r\n            }\r\n        ]\r\n    },\r\n    \"stId\": {{id}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Base_Url_student}}/api/addresses/{{id}}",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"addresses",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete address by ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let s_address = pm.environment.get(\"id\");\r",
+							"\r",
+							"pm.test(\"Check if student address is present\", function () {\r",
+							"    if (!s_address) {\r",
+							"        console.error(\"No address is found.\");\r",
+							"        postman.setNextRequest(null); \r",
+							"    } else {\r",
+							"        pm.expect(s_address).to.be.a('number'); \r",
+							"        console.log(\"Student ID: \" + s_address);\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{Base_Url_student}}/api/addresses/{{id}}",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"addresses",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create technical skills by ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let languages = [\r",
+							"   \"English\",\r",
+							"    \"Mandarin Chinese\",\r",
+							"    \"Hindi\",\r",
+							"    \"Spanish\",\r",
+							"    \"French\",\r",
+							"    \"Arabic\",\r",
+							"    \"Bengali\",\r",
+							"    \"Russian\",\r",
+							"    \"Portuguese\",\r",
+							"    \"Japanese\",\r",
+							"    \"Punjabi\",\r",
+							"    \"German\",\r",
+							"    \"Korean\",\r",
+							"    \"Italian\",\r",
+							"    \"Turkish\",\r",
+							"    \"Tamil\",\r",
+							"    \"Urdu\",\r",
+							"    \"Vietnamese\",\r",
+							"    \"Persian\",\r",
+							"    \"Swahili\",\r",
+							"    \"Malay\",\r",
+							"    \"Thai\",\r",
+							"    \"Dutch\",\r",
+							"    \"Greek\",\r",
+							"    \"Hebrew\",\r",
+							"    \"Polish\",\r",
+							"    \"Czech\",\r",
+							"    \"Swedish\",\r",
+							"    \"Hungarian\",\r",
+							"    \"Zulu\",\r",
+							"    \"Amharic\"\r",
+							"];\r",
+							"\r",
+							"let randomLangauge = languages[Math.floor(Math.random() * languages.length)];\r",
+							"pm.environment.set(\"random_language\", randomLangauge);\r",
+							"console.log(\"Generated Random Middle Name: \" + randomLangauge);\r",
+							"\r",
+							"var yearOfExp= pm.variables.replaceIn(\"{{$randomInt}}\")\r",
+							"pm.environment.set(\"experience\", yearOfExp);\r",
+							"\r",
+							"let jsonData = {\r",
+							"    \"date_formats\": [\r",
+							"        \"Tue Aug 13 2024 10:43:26 GMT+0000 (Coordinated Universal Time)\",\r",
+							"        \"14/02/1997\",\r",
+							"        \"2024-11-22\",\r",
+							"        \"12/12/12\"\r",
+							"    ]\r",
+							"};\r",
+							"\r",
+							"// Function to generate a random date between a range\r",
+							"function getRandomDate(start, end) {\r",
+							"    let randomTime = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));\r",
+							"    return randomTime;\r",
+							"}\r",
+							"\r",
+							"// Generate a random date within a 30-year range (1990 - 2050)\r",
+							"let startDate = new Date(1900, 0, 1); // Start: Jan 1, 1990\r",
+							"let endDate = new Date(2050, 11, 31); // End: Dec 31, 2050\r",
+							"let randomDate = getRandomDate(startDate, endDate);\r",
+							"\r",
+							"// Function to format dates dynamically\r",
+							"function formatRandomDate(date, format) {\r",
+							"    if (format === \"DD/MM/YYYY\") {\r",
+							"        return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;\r",
+							"    } else if (format === \"YYYY-MM-DD\") {\r",
+							"        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;\r",
+							"    } else if (format === \"Day of Week Format\") {\r",
+							"        return date.toString(); // Full date format like \"Tue Aug 13 2024 10:43:26 GMT+0000 (Coordinated Universal Time)\"\r",
+							"    } else if (format === \"Short Year Format\") {\r",
+							"        return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getFullYear()).slice(-2)}`;\r",
+							"    } else {\r",
+							"        throw new Error(\"Unknown format type\");\r",
+							"    }\r",
+							"}\r",
+							"\r",
+							"// Randomly pick a format from JSON data\r",
+							"let formats = jsonData.date_formats;\r",
+							"let randomFormat = formats[Math.floor(Math.random() * formats.length)];\r",
+							"\r",
+							"// Format the random date\r",
+							"let formattedDate;\r",
+							"if (randomFormat.includes(\"GMT\")) {\r",
+							"    formattedDate = randomDate.toString(); // Handle GMT/UTC format\r",
+							"} else if (randomFormat.includes(\"/\")) {\r",
+							"    formattedDate = formatRandomDate(randomDate, \"DD/MM/YYYY\");\r",
+							"} else if (randomFormat.includes(\"-\")) {\r",
+							"    formattedDate = formatRandomDate(randomDate, \"YYYY-MM-DD\");\r",
+							"} else {\r",
+							"    formattedDate = formatRandomDate(randomDate, \"Short Year Format\");\r",
+							"}\r",
+							"// Save the random date as an environment variable\r",
+							"pm.environment.set(\"lastused\", formattedDate);\r",
+							"console.log(\"Generated Random Date: \" + formattedDate);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validate Status Code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const body = pm.request.body.raw ? JSON.parse(pm.request.body.raw) : {};\r",
+							"\r",
+							"pm.test(\"Validate Required Fields in Request Body\", function () {\r",
+							"    pm.expect(body).to.have.property(\"id\").that.is.a(\"number\"); \r",
+							"    pm.expect(body).to.have.property(\"language\").that.is.an(\"array\");\r",
+							"    pm.expect(body).to.have.property(\"yearexp\").that.is.a(\"string\");\r",
+							"    pm.expect(body).to.have.property(\"lastused\").that.is.a(\"string\");\r",
+							"    pm.expect(body).to.have.property(\"st_id\").that.is.a(\"number\"); \r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"language\": [\r\n        \"English\",\r\n        \"{{random_language}}\"\r\n    ],\r\n    \"yearexp\": \"{{experience}}\",\r\n    \"lastused\": \"{{lastused}}\",\r\n    \"st_id\": {{id}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Base_Url_student}}/api/technicalskills/{{id}}",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"technicalskills",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Final details of student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"var status = pm.response.code;\r",
+							"console.log(status);\r",
+							"switch (status) {\r",
+							"    case 200:\r",
+							"        var jsonData = pm.response.json();\r",
+							"\r",
+							"        pm.test(\"Check Status code 200 OK\", function () {\r",
+							"            pm.response.to.have.status(200);\r",
+							"        });\r",
+							"        pm.test(\"Validate 'status' is dynamically loaded from response\", function () {\r",
+							"            pm.expect(jsonData).to.have.property(\"status\");\r",
+							"            let statusValue = jsonData.status;\r",
+							"            // Handle case where 'status' is a string (\"true\" or \"false\")\r",
+							"            if (typeof statusValue === \"string\") {\r",
+							"                statusValue = (statusValue.toLowerCase() === \"true\");\r",
+							"            }\r",
+							"            pm.expect(typeof statusValue).to.eql(\"boolean\", `Expected 'status' to be boolean but got '${typeof statusValue}'`);\r",
+							"            pm.expect(statusValue === true || statusValue === false, `Expected 'status' to be true or false, but got '${statusValue}'`).to.be.true;\r",
+							"            console.log(\"Status value:\", statusValue);\r",
+							"        });\r",
+							"\r",
+							"        pm.test(\"Validate First Name\", function () {\r",
+							"            var jsonData = pm.response.json();\r",
+							"            pm.expect(jsonData.data.first_name).to.equal(pm.environment.get(\"firstName\"));\r",
+							"        });\r",
+							"\r",
+							"        pm.test(\"Validate Middle Name\", function () {\r",
+							"            pm.expect(jsonData.data.middle_name).to.equal(pm.environment.get(\"random_middle_name\"));\r",
+							"        });\r",
+							"        pm.test(\"Validate Last Name\", function () {\r",
+							"            pm.expect(jsonData.data.last_name).to.equal(pm.environment.get(\"lastName\"));\r",
+							"        });\r",
+							"\r",
+							"        let randomDate = pm.environment.get(\"random_date\");\r",
+							"        // Define regular expressions for the formats\r",
+							"        let formats = [\r",
+							"            /^[A-Za-z]{3} [A-Za-z]{3} \\d{2} \\d{4} \\d{2}:\\d{2}:\\d{2} GMT[+-]\\d{4} \\(.*\\)$/, // GMT/UTC Format\r",
+							"            /^\\d{2}\\/\\d{2}\\/\\d{4}$/, // DD/MM/YYYY\r",
+							"            /^\\d{4}-\\d{2}-\\d{2}$/, // YYYY-MM-DD\r",
+							"            /^\\d{2}\\/\\d{2}\\/\\d{2}$/ // Short Year Format\r",
+							"        ];\r",
+							"\r",
+							"        // Check if the random date matches any of the formats\r",
+							"        let isValidFormat = formats.some((regex) => regex.test(randomDate));\r",
+							"\r",
+							"        // Validate the format\r",
+							"        pm.test(\"Random Date Format Validation\", function () {\r",
+							"            pm.expect(isValidFormat).to.be.true;\r",
+							"            console.log(\"Validated Date Format: \" + randomDate);\r",
+							"        });\r",
+							"\r",
+							"        pm.test(\"Validate language\", function () {\r",
+							"            for (i = 0; i < jsonData.data.TechnicalDetails.length; i++) {\r",
+							"                if (pm.expect(jsonData.data.TechnicalDetails[i].language == pm.environment.get(\"random_language\"))) {\r",
+							"                    pm.test(\"Language Validation is successful\");\r",
+							"\r",
+							"                }\r",
+							"                else {\r",
+							"                    pm.expect(pm.response.code).to.eql(404);\r",
+							"                }\r",
+							"            }\r",
+							"\r",
+							"        });\r",
+							"        pm.test(\"Validate year of experience\", function () {\r",
+							"            for (i = 0; i < jsonData.data.TechnicalDetails.length; i++) {\r",
+							"                if (pm.expect(jsonData.data.TechnicalDetails[i].yearexp == pm.environment.get(\"experience\"))) {\r",
+							"                    pm.test(\"Year of experience Validation is successful\");\r",
+							"                }\r",
+							"                else {\r",
+							"                    pm.expect(pm.response.code).to.eql(404);\r",
+							"                }\r",
+							"            }\r",
+							"        });\r",
+							"        pm.test(\"Validate date\", function () {\r",
+							"            for (i = 0; i < jsonData.data.TechnicalDetails.length; i++) {\r",
+							"                if (pm.expect(jsonData.data.TechnicalDetails[i].lastused == pm.environment.get(\"lastused\"))) {\r",
+							"                    pm.test(\"Validation of lastused is successful\")\r",
+							"                }\r",
+							"                else {\r",
+							"                    pm.expect(pm.response.code).to.eql(404);\r",
+							"                }\r",
+							"            }\r",
+							"        });\r",
+							"        pm.test(\"Validate permanent address\", function () {\r",
+							"            for (i = 0; i < jsonData.data.Address.length; i++) {\r",
+							"                if (pm.expect(jsonData.data.Address[i].Permanent_Address.House_Number == pm.environment.get(\"houseNumber\"))) {\r",
+							"                    pm.test(\"House_Number Validation is successful\")\r",
+							"                }\r",
+							"                if (pm.expect(jsonData.data.Address[i].Permanent_Address.City == pm.environment.get(\"city\"))) {\r",
+							"                    pm.test(\"City Validation is successful\")\r",
+							"                }\r",
+							"                if (pm.expect(jsonData.data.Address[i].Permanent_Address.State == pm.environment.get(\"state\"))) {\r",
+							"                    pm.test(\"StateValidation is successful\")\r",
+							"                }\r",
+							"                if (pm.expect(jsonData.data.Address[i].Permanent_Address.Country == pm.environment.get(\"Country\"))) {\r",
+							"                    pm.test(\"Country Validation is successful\")\r",
+							"                }\r",
+							"            }\r",
+							"        });\r",
+							"        pm.test(\"Phone Number Validation\", function () {\r",
+							"            let jsonData = pm.response.json();\r",
+							"\r",
+							"            for (let i = 0; i < jsonData.data.Address.length; i++) {\r",
+							"                let permanentAddress = jsonData.data.Address[i].Permanent_Address;\r",
+							"\r",
+							"                if (permanentAddress && permanentAddress.PhoneNumber) {\r",
+							"                    for (let j = 0; j < permanentAddress.PhoneNumber.length; j++) {\r",
+							"                        let phoneNumber = permanentAddress.PhoneNumber[j];\r",
+							"                        if (pm.expect(phoneNumber.Std_Code == pm.environment.get(\"CountryCode\"))) {\r",
+							"                            pm.test(\"Country Code Validation is successful\")\r",
+							"                        }\r",
+							"                        if (pm.expect(phoneNumber.Home == pm.environment.get(\"home\"))) {\r",
+							"                            pm.test(\"Home number validation is successful\")\r",
+							"                        }\r",
+							"                        if (pm.expect(phoneNumber.Mobile == pm.environment.get(\"mobile\"))) {\r",
+							"                            pm.test(\"Mobile number validation is successful\")\r",
+							"                        }\r",
+							"                        if (pm.expect(phoneNumber.Std_Code == pm.environment.get(\"CountryCode1\"))) {\r",
+							"                            pm.test(\"Country Code 2 Validation is successful\")\r",
+							"                        }\r",
+							"                        if (pm.expect(phoneNumber.Home == pm.environment.get(\"home1\"))) {\r",
+							"                            pm.test(\"Home number  2 validation is successful\")\r",
+							"                        }\r",
+							"                        if (pm.expect(phoneNumber.Mobile == pm.environment.get(\"mobile1\"))) {\r",
+							"                            pm.test(\"Mobile number 2 validation is successful\")\r",
+							"                        }\r",
+							"                    }\r",
+							"                } else {\r",
+							"                    pm.expect.fail(`Permanent_Address or PhoneNumber is missing at Address[${i}]`);\r",
+							"                }\r",
+							"            }\r",
+							"        });\r",
+							"        pm.test(\"Validate current address\", function () {\r",
+							"            pm.expect(jsonData.data.Address[0].Current_Address).to.eql(pm.environment.get(\"Current_Address\"));\r",
+							"        });\r",
+							"\r",
+							"        break;\r",
+							"\r",
+							"    case 404:\r",
+							"        pm.test(\"Something went wrong/Not found\");\r",
+							"        break;\r",
+							"\r",
+							"    case 500:\r",
+							"        pm.test(\"Something went wrong\");\r",
+							"        break;\r",
+							"\r",
+							"    default:\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json; charset=utf-8')\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if status is a string\", function () {\r",
+							"    pm.expect(jsonData.status).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if first_name is a string\", function () {\r",
+							"    pm.expect(jsonData.data.first_name).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if middle_name is a string\", function () {\r",
+							"    pm.expect(jsonData.data.middle_name).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if last_name is a string\", function () {\r",
+							"    pm.expect(jsonData.data.last_name).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if date_of_birth is a string\", function () {\r",
+							"    pm.expect(jsonData.data.date_of_birth).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if TechnicalDetails is an array\", function () {\r",
+							"    pm.expect(jsonData.data.TechnicalDetails).to.be.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if each TechnicalDetail has a valid id (number)\", function () {\r",
+							"    for (let i = 0; i < jsonData.data.TechnicalDetails.length; i++) {\r",
+							"        pm.expect(jsonData.data.TechnicalDetails[i].id).to.be.a('number');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if language is an array of strings\", function () {\r",
+							"    for (let i = 0; i < jsonData.data.TechnicalDetails.length; i++) {\r",
+							"        pm.expect(jsonData.data.TechnicalDetails[i].language).to.be.an('array');\r",
+							"        jsonData.data.TechnicalDetails[i].language.forEach(function (language) {\r",
+							"            pm.expect(language).to.be.a('string');\r",
+							"        });\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if yearexp is a string\", function () {\r",
+							"    for (let i = 0; i < jsonData.data.TechnicalDetails.length; i++) {\r",
+							"        pm.expect(jsonData.data.TechnicalDetails[i].yearexp).to.be.a('string');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if lastused is a string\", function () {\r",
+							"    for (let i = 0; i < jsonData.data.TechnicalDetails.length; i++) {\r",
+							"        pm.expect(jsonData.data.TechnicalDetails[i].lastused).to.be.a('string');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if Address is an array\", function () {\r",
+							"    pm.expect(jsonData.data.Address).to.be.an('array');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if Permanent_Address is an object\", function () {\r",
+							"    for (let i = 0; i < jsonData.data.Address.length; i++) {\r",
+							"        pm.expect(jsonData.data.Address[i].Permanent_Address).to.be.an('object');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if PhoneNumber is an array of objects\", function () {\r",
+							"    for (let i = 0; i < jsonData.data.Address.length; i++) {\r",
+							"        pm.expect(jsonData.data.Address[i].Permanent_Address.PhoneNumber).to.be.an('array');\r",
+							"        jsonData.data.Address[i].Permanent_Address.PhoneNumber.forEach(function (phone) {\r",
+							"            pm.expect(phone).to.be.an('object');\r",
+							"            pm.expect(phone.Std_Code).to.be.a('string');\r",
+							"            pm.expect(phone.Home).to.be.a('string');\r",
+							"            pm.expect(phone.Mobile).to.be.a('string');\r",
+							"        });\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check if stId is a string\", function () {\r",
+							"    for (let i = 0; i < jsonData.data.Address.length; i++) {\r",
+							"        pm.expect(jsonData.data.Address[i].stId).to.be.a('string');\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Base_Url_student}}/api/FinalStudentDetails/{{id}}",
+					"host": [
+						"{{Base_Url_student}}"
+					],
+					"path": [
+						"api",
+						"FinalStudentDetails",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
