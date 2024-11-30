@@ -1039,3 +1039,22 @@ pm.test("Check if stId is a string", function () {
     }
 }
 ```
+## Run Command:  
+- Run Command for Console: 
+```console 
+newman run StudentAPI.postman_collection.json -e student_env.postman_environment.json 
+```
+- Run Command for Report: 
+```console 
+newman run StudentAPI.postman_collection.json -e student_env.postman_environment.json -r cli,htmlextra
+```
+
+# Newman report
+![image](https://github.com/user-attachments/assets/b684df05-172a-463d-bf23-044914686655)
+![image](https://github.com/user-attachments/assets/88a0826b-8249-4231-81db-37b1cf2d192f)
+![image](https://github.com/user-attachments/assets/e17dc54c-fe5a-440a-a292-80ffa11e568d)
+
+
+
+
+
