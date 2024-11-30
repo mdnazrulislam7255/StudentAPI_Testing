@@ -65,10 +65,11 @@ No authorization is required for this API.
 # Endpoints
 ## Create details of a student
 
-#### Description: Send a request to Create a student.                                                                                                                                     #### Method: POST                                                                                                                                                                        
-#### URL: [baseURL](https://thetestingworldapi.com)/api/studentsDetails/                                                                                                                  
-#### Headers:                                                                                                                                                                             
- Content-Type: application/json  
+#### Description: Send a request to Create a student.
+#### Method: POST                                                                                                                                                                        
+#### URL: [baseURL](https://thetestingworldapi.com)/api/studentsDetails/                                                                                                                 
+#### Headers:                                                                                                                                                                            
+Content-Type: application/json  
 #### Pre-request script:
 ``` console
 var ranadomId= pm.variables.replaceIn("{{$randomInt}}")
