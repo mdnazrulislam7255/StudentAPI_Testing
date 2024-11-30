@@ -1,4 +1,4 @@
-# StudentAPI_Testing
+# StudentAPI Documentation
 The Student API is designed to manage and retrieve information about students, including their details, address, and technical details. It supports common operations like creating, getting, updating, deleting student data, and writing test cases . Finally, I have generated a newman report to amalgamate all the test cases.
 
 **Key features:**                                                                                                                                                                         
